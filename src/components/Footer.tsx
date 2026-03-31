@@ -1,5 +1,4 @@
 import { Facebook, Instagram } from "lucide-react";
-import logo from "@/assets/logo.png";
 
 const TikTokIcon = () => (
   <svg viewBox="0 0 24 24" fill="currentColor" className="h-5 w-5">
@@ -10,7 +9,9 @@ const TikTokIcon = () => (
 const Footer = () => (
   <footer className="border-t border-border py-12 px-4">
     <div className="container mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
-      <img src={logo} alt="Microcosmos Editorial" className="h-8" />
+      <div className="text-sm font-semibold uppercase tracking-[0.28em] text-foreground md:text-base">
+        Microcosmos Editorial
+      </div>
 
       <div className="flex items-center gap-5">
         <a href="https://www.facebook.com/MicrocosmosEditorial" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-primary transition-colors">
