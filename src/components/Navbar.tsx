@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Menu, X } from "lucide-react";
-import logo from "@/assets/logo.png";
 
 const links = [
   { name: "Inicio", anchor: "#home" },
@@ -33,7 +32,9 @@ const Navbar = () => {
     >
       <div className="container mx-auto flex items-center justify-between px-4 py-3">
         <a href="#home">
-          <img src={logo} alt="Microcosmos Editorial" className="h-10" />
+          <div className="text-sm font-semibold uppercase tracking-[0.28em] text-foreground md:text-base">
+            Microcosmos Editorial
+          </div>
         </a>
 
         {/* Desktop */}
