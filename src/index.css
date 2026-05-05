@@ -1,84 +1,85 @@
+/* 1. IMPORTACIÓN DE FUENTES */
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
 
+/* 2. DIRECTIVAS DE TAILWIND */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+/* 3. CAPA BASE Y VARIABLES */
 @layer base {
   :root {
     --background: 0 0% 5.1%;
     --foreground: 0 0% 94.9%;
-
     --card: 0 0% 20%;
     --card-foreground: 0 0% 94.9%;
-
     --popover: 0 0% 10%;
     --popover-foreground: 0 0% 94.9%;
-
     --primary: 274 87% 53%;
     --primary-foreground: 0 0% 100%;
-
     --secondary: 0 0% 20%;
     --secondary-foreground: 0 0% 94.9%;
-
     --muted: 0 0% 15%;
     --muted-foreground: 0 0% 63.9%;
-
     --accent: 274 87% 53%;
     --accent-foreground: 0 0% 100%;
-
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 100%;
-
     --border: 0 0% 94.9% / 0.1;
     --input: 0 0% 94.9% / 0.1;
     --ring: 274 87% 53%;
-
     --radius: 1rem;
-
     --surface: 0 0% 20%;
     --accent-hover: 274 100% 65%;
-
-    --sidebar-background: 0 0% 7%;
-    --sidebar-foreground: 0 0% 94.9%;
-    --sidebar-primary: 274 87% 53%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 0 0% 15%;
-    --sidebar-accent-foreground: 0 0% 94.9%;
-    --sidebar-border: 0 0% 94.9% / 0.1;
-    --sidebar-ring: 274 87% 53%;
   }
-}
 
-@layer base {
   * {
     @apply border-border;
+    box-sizing: border-box;
   }
 
-  body {
-    @apply bg-background text-foreground font-sans;
+  /* REGLA DE ORO: Blindaje total para que nada se desborde en el celular */
+  html, body {
+    @apply bg-background text-foreground;
     font-family: 'Inter', sans-serif;
+    scroll-behavior: smooth;
+    
+    /* BLOQUEO DE SCROLL LATERAL */
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    max-width: 100vw !important;
+    overflow-x: hidden !important;
+    position: relative;
   }
 
-  html {
-    scroll-behavior: smooth;
+  /* Asegura que el contenedor de React también respete los límites */
+  #root {
+    width: 100%;
+    max-width: 100vw !important;
+    overflow-x: hidden !important;
+    position: relative;
   }
 }
 
+/* 4. UTILIDADES PERSONALIZADAS */
 @layer utilities {
+  /* Ocultar barra de scroll para el chat */
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  /* Efecto cristal para la UI de Microcosmos */
   .glass {
     @apply backdrop-blur-xl bg-background/60 border border-border;
   }
 
+  /* Gradiente para textos destacados */
   .text-gradient {
     @apply bg-clip-text text-transparent bg-gradient-to-r from-primary to-accent-hover;
-  }
-
-  .glow-shadow {
-    box-shadow: 0 8px 30px rgb(160 32 240 / 0.15);
-  }
-
-  .glow-shadow-hover {
-    box-shadow: 0 8px 40px rgb(160 32 240 / 0.3);
   }
 }

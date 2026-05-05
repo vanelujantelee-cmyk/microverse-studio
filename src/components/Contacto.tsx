@@ -1,136 +1,130 @@
-import { useState, useCallback, useRef } from "react";
+import React from "react";
 import { motion } from "framer-motion";
-import { Upload, FileText, X } from "lucide-react";
+import { Link as LinkIcon, Send } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Progress } from "@/components/ui/progress";
 
 const tiposObra = ["Novela", "Cuento", "Poesía", "Ensayo", "No ficción", "Otro"];
 
 const Contacto = () => {
-  const [file, setFile] = useState<File | null>(null);
-  const [uploadProgress, setUploadProgress] = useState(0);
-  const [dragOver, setDragOver] = useState(false);
-  const fileInputRef = useRef<HTMLInputElement>(null);
-
-  const simulateUpload = useCallback((f: File) => {
-    setFile(f);
-    setUploadProgress(0);
-    let progress = 0;
-    const interval = setInterval(() => {
-      progress += Math.random() * 20 + 5;
-      if (progress >= 100) {
-        progress = 100;
-        clearInterval(interval);
-      }
-      setUploadProgress(Math.min(progress, 100));
-    }, 200);
-  }, []);
-
-  const handleDrop = useCallback(
-    (e: React.DragEvent) => {
-      e.preventDefault();
-      setDragOver(false);
-      const f = e.dataTransfer.files[0];
-      if (f) simulateUpload(f);
-    },
-    [simulateUpload]
-  );
-
   return (
-    <section id="contacto" className="py-24 px-4 bg-surface/30">
+    <section id="contacto" className="py-24 px-4 bg-black">
       <div className="container mx-auto max-w-2xl">
+        {/* Título de la sección */}
         <motion.h2
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="text-3xl md:text-4xl font-bold text-center mb-4"
+          className="text-4xl md:text-5xl font-black text-center mb-12 uppercase italic tracking-tighter"
         >
-          <span className="text-gradient">Contáctanos</span>
+          <span className="text-white">Envía tu</span> <span className="text-purple-500">Obra</span>
         </motion.h2>
-        <p className="text-center text-muted-foreground mb-12">
-          ¿Tienes un manuscrito listo? Envíanos tu propuesta y haremos realidad tu libro.
-        </p>
 
         <motion.form
+          onSubmit={async (e: React.FormEvent<HTMLFormElement>) => {
+            e.preventDefault();
+            const form = e.currentTarget;
+            const formData = new FormData(form);
+
+            try {
+              const response = await fetch("https://formspree.io/f/maqlbywz", {
+                method: "POST",
+                body: formData,
+                headers: {
+                  'Accept': 'application/json'
+                }
+              });
+
+              if (response.ok) {
+                alert("¡Propuesta enviada con éxito a Microcosmos! Revisaremos tu enlace pronto.");
+                form.reset();
+              } else {
+                const data = await response.json() as { error?: string };
+                alert(data.error || "Error al enviar. Intenta de nuevo.");
+              }
+            } catch (error) {
+              alert("Hubo un problema de conexión. Intenta de nuevo, Luis.");
+            }
+          }}
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="space-y-5 rounded-2xl bg-surface border border-border p-8"
-          onSubmit={(e) => e.preventDefault()}
+          className="space-y-6 rounded-[2.5rem] bg-zinc-900/40 border border-white/5 p-8 md:p-12 shadow-2xl backdrop-blur-sm"
         >
+          {/* Nombre */}
           <div>
-            <label className="mb-1.5 block text-sm font-semibold">Nombre completo</label>
-            <Input placeholder="Tu nombre" className="rounded-2xl bg-background border-border" />
-          </div>
-          <div>
-            <label className="mb-1.5 block text-sm font-semibold">Email</label>
-            <Input type="email" placeholder="correo@ejemplo.com" className="rounded-2xl bg-background border-border" />
-          </div>
-          <div>
-            <label className="mb-1.5 block text-sm font-semibold">Tipo de obra</label>
-            <select className="w-full rounded-2xl border border-border bg-background px-3 py-2.5 text-sm text-foreground outline-none focus:ring-2 focus:ring-ring">
-              <option value="">Selecciona una opción</option>
-              {tiposObra.map((t) => (
-                <option key={t} value={t}>{t}</option>
-              ))}
-            </select>
-          </div>
-          <div>
-            <label className="mb-1.5 block text-sm font-semibold">Sinopsis</label>
-            <Textarea placeholder="Cuéntanos de qué trata tu obra..." rows={4} className="rounded-2xl bg-background border-border" />
+            <label className="mb-2 block text-[10px] font-black uppercase text-purple-500 tracking-widest">Nombre del Autor</label>
+            <Input 
+              name="nombre" 
+              placeholder="Tu nombre artístico o real" 
+              className="rounded-2xl bg-black/50 border-white/10 text-white h-12 focus:border-purple-500 transition-all" 
+              required 
+            />
           </div>
 
-          {/* Drag & Drop */}
+          {/* Email */}
           <div>
-            <label className="mb-1.5 block text-sm font-semibold">Sube tu manuscrito (PDF/Word)</label>
-            <div
-              onDragOver={(e) => { e.preventDefault(); setDragOver(true); }}
-              onDragLeave={() => setDragOver(false)}
-              onDrop={handleDrop}
-              onClick={() => fileInputRef.current?.click()}
-              className={`cursor-pointer rounded-2xl border-2 border-dashed p-8 text-center transition-colors ${
-                dragOver ? "border-primary bg-primary/5" : "border-border hover:border-primary/50"
-              }`}
-            >
-              <input
-                ref={fileInputRef}
-                type="file"
-                accept=".pdf,.doc,.docx"
-                className="hidden"
-                onChange={(e) => {
-                  const f = e.target.files?.[0];
-                  if (f) simulateUpload(f);
-                }}
-              />
-              {file ? (
-                <div className="space-y-3">
-                  <div className="flex items-center justify-center gap-2 text-foreground">
-                    <FileText size={20} className="text-primary" />
-                    <span className="text-sm font-semibold">{file.name}</span>
-                    <button onClick={(e) => { e.stopPropagation(); setFile(null); setUploadProgress(0); }}>
-                      <X size={16} className="text-muted-foreground hover:text-foreground" />
-                    </button>
-                  </div>
-                  <Progress value={uploadProgress} className="h-2" />
-                  <p className="text-xs text-muted-foreground">{Math.round(uploadProgress)}%</p>
-                </div>
-              ) : (
-                <>
-                  <Upload size={32} className="mx-auto mb-2 text-muted-foreground" />
-                  <p className="text-sm text-muted-foreground">
-                    Arrastra tu archivo aquí o <span className="text-primary font-semibold">haz clic para seleccionar</span>
-                  </p>
-                </>
-              )}
+            <label className="mb-2 block text-[10px] font-black uppercase text-purple-500 tracking-widest">Correo de Contacto</label>
+            <Input 
+              name="email" 
+              type="email" 
+              placeholder="editorial@ejemplo.com" 
+              className="rounded-2xl bg-black/50 border-white/10 text-white h-12 focus:border-purple-500 transition-all" 
+              required 
+            />
+          </div>
+
+          {/* Tipo de obra */}
+          <div>
+            <label className="mb-2 block text-[10px] font-black uppercase text-purple-500 tracking-widest">Género Literario</label>
+            <div className="relative">
+              <select 
+                name="tipo_obra" 
+                className="w-full rounded-2xl border border-white/10 bg-black/50 px-4 py-3 text-sm text-white outline-none focus:border-purple-500 transition-all appearance-none"
+                required
+              >
+                <option value="" className="bg-zinc-900">Selecciona el género</option>
+                {tiposObra.map((t) => (
+                  <option key={t} value={t} className="bg-zinc-900">{t}</option>
+                ))}
+              </select>
             </div>
+          </div>
+
+          {/* Sinopsis */}
+          <div>
+            <label className="mb-2 block text-[10px] font-black uppercase text-purple-500 tracking-widest">Breve Sinopsis</label>
+            <Textarea 
+              name="sinopsis" 
+              placeholder="¿De qué trata tu historia?" 
+              rows={4} 
+              className="rounded-2xl bg-black/50 border-white/10 text-white focus:border-purple-500 transition-all resize-none" 
+              required 
+            />
+          </div>
+
+          {/* Link al Manuscrito */}
+          <div className="p-6 bg-purple-500/5 rounded-3xl border border-purple-500/10">
+            <label className="mb-2 flex items-center gap-2 text-[10px] font-black uppercase text-purple-500 tracking-widest">
+              <LinkIcon size={14} /> Link del Manuscrito (Drive / Dropbox)
+            </label>
+            <Input 
+              name="link_manuscrito" 
+              type="url" 
+              placeholder="https://drive.google.com/..." 
+              className="rounded-xl bg-black/60 border-white/10 text-white h-12 focus:border-purple-500 transition-all mb-2" 
+              required 
+            />
+            <p className="text-[9px] text-gray-500 uppercase italic leading-tight">
+              * Asegúrate de que el enlace sea público para que podamos leerlo.
+            </p>
           </div>
 
           <button
             type="submit"
-            className="w-full rounded-2xl bg-primary py-3 font-semibold text-primary-foreground hover:bg-accent-hover transition-all hover:scale-[1.02] animate-pulse"
+            className="w-full flex items-center justify-center gap-3 rounded-full bg-white py-5 font-black text-black uppercase text-[10px] tracking-[0.4em] hover:bg-purple-500 hover:text-white transition-all hover:scale-[1.02] active:scale-95 shadow-xl group"
           >
-            Enviar propuesta
+            Enviar a Microcosmos <Send size={16} className="group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
           </button>
         </motion.form>
       </div>

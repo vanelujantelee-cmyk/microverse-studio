@@ -85,12 +85,26 @@ export default {
           "0%, 100%": { opacity: "1" },
           "50%": { opacity: "0.7" },
         },
+        // --- KEYFRAMES PARA EL GLITCH ---
+        "glitch-1": {
+          "0%, 100%": { transform: "translate(0)" },
+          "33%": { transform: "translate(-4px, 2px)" },
+          "66%": { transform: "translate(4px, -2px)" },
+        },
+        "glitch-2": {
+          "0%, 100%": { transform: "translate(0)" },
+          "33%": { transform: "translate(4px, -2px)" },
+          "66%": { transform: "translate(-4px, 2px)" },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
         "gradient-shift": "gradient-shift 3s ease infinite",
         pulse: "pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite",
+        // --- ANIMACIONES PARA EL GLITCH ---
+        "glitch-1": "glitch-1 0.25s infinite linear",
+        "glitch-2": "glitch-2 0.25s infinite linear",
       },
     },
   },

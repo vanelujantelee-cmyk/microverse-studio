@@ -1,71 +1,59 @@
 import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import { blogPosts as posts } from "./blogs";
 
-const posts = [
-  {
-    title: "5 claves para escribir tu primera novela",
-    excerpt: "Descubre los secretos que todo escritor principiante necesita conocer antes de enfrentarse a la página en blanco.",
-    date: "15 Mar 2026",
-    image: "https://images.unsplash.com/photo-1455390582262-044cdead277a?w=400&h=250&fit=crop",
-  },
-  {
-    title: "El auge de la ciencia ficción en Colombia",
-    excerpt: "Exploramos cómo los autores colombianos están redefiniendo el género con voces únicas y perspectivas locales.",
-    date: "8 Mar 2026",
-    image: "https://images.unsplash.com/photo-1506466010722-395aa2bef877?w=400&h=250&fit=crop",
-  },
-  {
-    title: "Guía completa de autoedición 2026",
-    excerpt: "Todo lo que necesitas saber sobre ISBN, derechos de autor y distribución en el mercado hispanohablante.",
-    date: "1 Mar 2026",
-    image: "https://images.unsplash.com/photo-1481627834876-b7833e8f5570?w=400&h=250&fit=crop",
-  },
-];
+const Blog = () => {
+  const navigate = useNavigate();
 
-const Blog = () => (
-  <section id="blog" className="py-24 px-4 bg-surface/30">
-    <div className="container mx-auto">
-      <motion.h2
-        initial={{ opacity: 0, y: 30 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
-        className="text-3xl md:text-4xl font-bold text-center mb-4"
-      >
-        <span className="text-gradient">Blog</span> Literario
-      </motion.h2>
-      <p className="text-center text-muted-foreground mb-12">
-        Noticias, consejos y tendencias del mundo editorial.
-      </p>
+  return (
+    <section id="blog" className="py-20 md:py-32 bg-black text-white overflow-hidden">
+      <div className="container mx-auto px-6 md:px-12">
+        <div className="text-center mb-16 md:mb-24">
+          <h2 className="text-4xl md:text-7xl font-black uppercase italic tracking-tighter mb-4">
+            Blog <span className="text-purple-500">Literario</span>
+          </h2>
+          <p className="text-zinc-500 uppercase text-[9px] md:text-xs tracking-[0.3em]">
+            Micro-relatos y crónicas del universo Microcosmos
+          </p>
+        </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-        {posts.map((p, i) => (
-          <motion.article
-            key={p.title}
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: i * 0.1 }}
-            whileHover={{ y: -6 }}
-            className="group rounded-2xl bg-surface border border-border overflow-hidden transition-shadow duration-300 hover:glow-shadow-hover"
-          >
-            <img
-              src={p.image}
-              alt={p.title}
-              className="w-full h-48 object-cover transition-transform duration-500 group-hover:scale-105"
-            />
-            <div className="p-6">
-              <span className="text-xs text-muted-foreground">{p.date}</span>
-              <h3 className="mt-2 text-lg font-bold">{p.title}</h3>
-              <p className="mt-2 text-sm text-muted-foreground line-clamp-2">{p.excerpt}</p>
-              <span className="mt-4 inline-flex items-center gap-1 text-sm font-semibold text-primary hover:text-accent-hover transition-colors cursor-pointer">
-                Leer más <ArrowRight size={14} />
-              </span>
-            </div>
-          </motion.article>
-        ))}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-10">
+          {posts.map((post, i) => (
+            <motion.div
+              key={post.id}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ delay: i * 0.1 }}
+              viewport={{ once: true }}
+              onClick={() => navigate(`/blog/${post.id}`)}
+              className="group bg-zinc-900/40 border border-white/5 rounded-[2.5rem] overflow-hidden cursor-pointer hover:border-purple-500/40 transition-all backdrop-blur-sm"
+            >
+              <div className="h-56 overflow-hidden relative">
+                <img
+                  src={post.image}
+                  alt={post.title}
+                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                />
+                <div className="absolute top-4 left-4 bg-black/60 backdrop-blur-md px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-widest border border-white/10">
+                  {post.date}
+                </div>
+              </div>
+              <div className="p-8">
+                <h3 className="text-xl md:text-2xl font-black uppercase tracking-tight leading-tight mb-4 group-hover:text-purple-400 transition-colors">
+                  {post.title}
+                </h3>
+                <p className="text-zinc-500 text-sm mb-4 leading-relaxed">{post.excerpt}</p>
+                <div className="flex items-center gap-2 text-[10px] font-black text-zinc-400 uppercase tracking-widest group-hover:text-white transition-colors">
+                  Leer <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
+                </div>
+              </div>
+            </motion.div>
+          ))}
+        </div>
       </div>
-    </div>
-  </section>
-);
+    </section>
+  );
+};
 
 export default Blog;

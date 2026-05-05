@@ -1,4 +1,5 @@
 import { Facebook, Instagram } from "lucide-react";
+import { Link } from "react-router-dom"; // IMPORTANTE: Para que funcione el link interno
 
 const TikTokIcon = () => (
   <svg viewBox="0 0 24 24" fill="currentColor" className="h-5 w-5">
@@ -7,25 +8,56 @@ const TikTokIcon = () => (
 );
 
 const Footer = () => (
-  <footer className="border-t border-border py-12 px-4">
-    <div className="container mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
-      <div className="text-sm font-semibold uppercase tracking-[0.28em] text-foreground md:text-base">
-        Microcosmos Editorial
+  <footer className="border-t border-white/10 py-16 md:py-12 px-6 bg-[#0a0a0a]">
+    <div className="container mx-auto flex flex-col md:flex-row items-center justify-between gap-10 md:gap-8 text-center md:text-left">
+      
+      {/* Logo o Nombre - Estética Microcosmos */}
+      <div className="text-sm font-black uppercase tracking-[0.4em] text-white md:text-base italic">
+        Microcosmos <span className="text-[#a855f7] not-italic">Editorial</span>
       </div>
 
-      <div className="flex items-center gap-5">
-        <a href="https://www.facebook.com/MicrocosmosEditorial" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-primary transition-colors">
-          <Facebook size={20} />
+      {/* Redes Sociales con tus links oficiales */}
+      <div className="flex items-center gap-10 md:gap-8">
+        <a 
+          href="https://www.facebook.com/MicrocosmosEditorial" 
+          target="_blank" 
+          rel="noopener noreferrer" 
+          className="text-gray-400 hover:text-[#a855f7] transition-all duration-300 transform hover:scale-110"
+        >
+          <Facebook size={22} />
         </a>
-        <a href="https://www.instagram.com/microcosmoseditorial/" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-primary transition-colors">
-          <Instagram size={20} />
+        <a 
+          href="https://www.instagram.com/microcosmoseditorial/" 
+          target="_blank" 
+          rel="noopener noreferrer" 
+          className="text-gray-400 hover:text-[#a855f7] transition-all duration-300 transform hover:scale-110"
+        >
+          <Instagram size={22} />
         </a>
-        <a href="https://www.tiktok.com/@microcosmos64?lang=es" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-primary transition-colors">
+        <a 
+          href="https://www.tiktok.com/@microcosmos64?lang=es" 
+          target="_blank" 
+          rel="noopener noreferrer" 
+          className="text-gray-400 hover:text-[#a855f7] transition-all duration-300 transform hover:scale-110"
+        >
           <TikTokIcon />
         </a>
       </div>
 
-      <p className="text-sm text-muted-foreground">© 2026 Editorial Microcosmos - Medellín, Colombia</p>
+      {/* Copyright y Link Legal */}
+      <div className="flex flex-col gap-2 items-center md:items-end">
+        <p className="text-[10px] md:text-xs text-gray-500 font-sans uppercase tracking-widest opacity-60">
+          © 2026 Editorial Microcosmos — Medellín, Colombia
+        </p>
+        
+        {/* LINK PARA GOOGLE MERCHANT CENTER */}
+        <Link 
+          to="/devoluciones" 
+          className="text-[9px] md:text-[10px] text-zinc-600 hover:text-[#a855f7] uppercase tracking-[0.2em] transition-colors duration-300"
+        >
+          Política de Devoluciones
+        </Link>
+      </div>
     </div>
   </footer>
 );

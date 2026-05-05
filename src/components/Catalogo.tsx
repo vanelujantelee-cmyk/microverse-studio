@@ -1,46 +1,46 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { motion } from "framer-motion";
-import { MessageCircle } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
+import { ChevronLeft, ChevronRight } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import { books } from "../data/books";
 
-const genres = ["Todos", "Terror", "Distopía", "Poesía", "Ciencia Ficción"];
-
-const books = [
-  { id: 1, title: "Ecos del Abismo", author: "Camila Ríos", price: "$45.000", genre: "Terror", nuevo: true, cover: "https://images.unsplash.com/photo-1543002588-bfa74002ed7e?w=300&h=400&fit=crop" },
-  { id: 2, title: "Cenizas del Mañana", author: "Andrés Lozano", price: "$52.000", genre: "Distopía", nuevo: true, cover: "https://images.unsplash.com/photo-1532012197267-da84d127e765?w=300&h=400&fit=crop" },
-  { id: 3, title: "Versos de Neón", author: "Lucía Vargas", price: "$38.000", genre: "Poesía", nuevo: false, cover: "https://images.unsplash.com/photo-1544947950-fa07a98d237f?w=300&h=400&fit=crop" },
-  { id: 4, title: "Órbita Rota", author: "Miguel Torres", price: "$49.000", genre: "Ciencia Ficción", nuevo: true, cover: "https://images.unsplash.com/photo-1512820790803-83ca734da794?w=300&h=400&fit=crop" },
-  { id: 5, title: "La Sombra que Habla", author: "Diana Mejía", price: "$42.000", genre: "Terror", nuevo: false, cover: "https://images.unsplash.com/photo-1524578271613-d550eacf6090?w=300&h=400&fit=crop" },
-  { id: 6, title: "Futuro Imperfecto", author: "Sebastián Cano", price: "$55.000", genre: "Distopía", nuevo: false, cover: "https://images.unsplash.com/photo-1495446815901-a7297e633e8d?w=300&h=400&fit=crop" },
-];
+const genres = ["Todos", "Terror", "Thriller", "Romance", "Ficción", "Misterio", "Fábulas"];
 
 const Catalogo = () => {
   const [filter, setFilter] = useState("Todos");
-  const filtered = filter === "Todos" ? books : books.filter((b) => b.genre === filter);
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const navigate = useNavigate();
+
+  const filtered = filter === "Todos" ? books : books.filter((b) => b.category === filter);
+
+  const scroll = (direction: "left" | "right") => {
+    if (scrollRef.current) {
+      const { scrollLeft, clientWidth } = scrollRef.current;
+      const scrollTo = direction === "left" ? scrollLeft - clientWidth / 1.5 : scrollLeft + clientWidth / 1.5;
+      scrollRef.current.scrollTo({ left: scrollTo, behavior: "smooth" });
+    }
+  };
 
   return (
-    <section id="catalogo" className="py-24 px-4">
-      <div className="container mx-auto">
-        <motion.h2
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="text-3xl md:text-4xl font-bold text-center mb-4"
-        >
-          Nuestro <span className="text-gradient">Catálogo</span>
-        </motion.h2>
-        <p className="text-center text-muted-foreground mb-10">Descubre las voces que están transformando la literatura colombiana.</p>
+    <section id="catalogo" className="py-24 bg-black overflow-hidden min-h-screen">
+      <div className="container mx-auto px-4 md:px-10">
+        <div className="text-center mb-12">
+          <h2 className="text-4xl md:text-7xl font-black uppercase italic tracking-tighter text-white mb-4">
+            Nuestro <span className="text-purple-500">Catálogo</span>
+          </h2>
+          <p className="text-zinc-500 text-sm tracking-[0.2em] uppercase font-bold">Voces Disruptivas</p>
+        </div>
 
-        {/* Filters */}
-        <div className="flex flex-wrap justify-center gap-3 mb-12">
+        {/* FILTROS */}
+        <div className="flex flex-wrap gap-3 mb-16 justify-center">
           {genres.map((g) => (
             <button
               key={g}
               onClick={() => setFilter(g)}
-              className={`rounded-2xl px-5 py-2 text-sm font-semibold transition-all ${
+              className={`rounded-xl px-6 py-2 text-[10px] font-black uppercase tracking-widest transition-all ${
                 filter === g
-                  ? "bg-primary text-primary-foreground glow-shadow"
-                  : "bg-surface text-foreground/70 hover:bg-muted"
+                  ? "bg-purple-600 text-white shadow-[0_0_15px_rgba(168,85,247,0.4)]"
+                  : "bg-zinc-900 text-zinc-500 border border-white/5 hover:border-purple-500/50"
               }`}
             >
               {g}
@@ -48,48 +48,67 @@ const Catalogo = () => {
           ))}
         </div>
 
-        {/* Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-          {filtered.map((book, i) => (
-            <motion.div
-              key={book.id}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: i * 0.1 }}
-              whileHover={{ y: -8 }}
-              className="group rounded-2xl bg-surface border border-border overflow-hidden transition-shadow duration-300 hover:glow-shadow-hover"
-            >
-              <div className="relative overflow-hidden">
-                <img
-                  src={book.cover}
-                  alt={book.title}
-                  className="w-full h-64 object-cover transition-transform duration-500 group-hover:scale-105"
-                />
-                {book.nuevo && (
-                  <Badge className="absolute top-3 left-3 bg-primary text-primary-foreground border-none">
-                    Nuevo
-                  </Badge>
-                )}
-              </div>
-              <div className="p-5">
-                <h3 className="text-lg font-bold">{book.title}</h3>
-                <p className="text-sm text-muted-foreground">{book.author}</p>
-                <div className="mt-4 flex items-center justify-between">
-                  <span className="text-xl font-bold text-primary">{book.price}</span>
-                  <a
-                    href={`https://wa.me/573001234567?text=Hola, quiero comprar "${book.title}"`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center gap-2 rounded-2xl bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground hover:bg-accent-hover transition-colors"
-                  >
-                    <MessageCircle size={16} />
-                    Comprar
-                  </a>
+        {/* CARRUSEL */}
+        <div className="relative group max-w-[1400px] mx-auto px-12">
+          <button
+            onClick={() => scroll("left")}
+            className="absolute left-0 top-[40%] z-50 p-4 bg-purple-600 text-white rounded-full opacity-0 group-hover:opacity-100 transition-all hover:scale-110 shadow-xl hidden md:flex"
+          >
+            <ChevronLeft size={24} />
+          </button>
+
+          <div
+            ref={scrollRef}
+            className="flex overflow-x-auto gap-8 pb-12 snap-x snap-mandatory scroll-smooth no-scrollbar"
+            style={{ scrollbarWidth: "none" }}
+          >
+            <style>{`.no-scrollbar::-webkit-scrollbar { display: none; }`}</style>
+
+            {filtered.map((book) => (
+              <motion.div
+                key={book.id}
+                layout
+                className="min-w-[260px] md:min-w-[300px] max-w-[300px] snap-center flex-shrink-0 group/card"
+              >
+                <div className="relative aspect-[3/4.5] overflow-hidden rounded-[2.5rem] bg-zinc-900 border border-white/5 group-hover/card:border-purple-500/50 transition-all duration-500 shadow-2xl">
+                  <img
+                    src={book.image}
+                    alt={book.title}
+                    className="w-full h-full object-cover transition-transform duration-700 group-hover/card:scale-110"
+                  />
+                  <div className="absolute inset-0 bg-black/80 opacity-0 group-hover/card:opacity-100 transition-all duration-300 flex items-center justify-center backdrop-blur-md">
+                    <button
+                      onClick={() => navigate(`/libro/${book.id}`)}
+                      className="bg-purple-600 text-white px-8 py-4 rounded-2xl font-black uppercase text-[10px] tracking-widest hover:bg-purple-500 transition-all"
+                    >
+                      Explorar Obra
+                    </button>
+                  </div>
                 </div>
-              </div>
-            </motion.div>
-          ))}
+                <div
+                  className="mt-8 px-4 cursor-pointer"
+                  onClick={() => navigate(`/libro/${book.id}`)}
+                >
+                  <span className="text-purple-500 font-black text-[10px] uppercase tracking-[0.2em] mb-2 block">
+                    {book.category}
+                  </span>
+                  <h3 className="text-xl font-black text-white uppercase italic tracking-tighter leading-tight group-hover/card:text-purple-500 transition-colors">
+                    {book.title}
+                  </h3>
+                  <p className="text-zinc-500 text-sm mt-1 italic">
+                    por <span className="text-zinc-300">{book.author}</span>
+                  </p>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+
+          <button
+            onClick={() => scroll("right")}
+            className="absolute right-0 top-[40%] z-50 p-4 bg-purple-600 text-white rounded-full opacity-0 group-hover:opacity-100 transition-all hover:scale-110 shadow-xl hidden md:flex"
+          >
+            <ChevronRight size={24} />
+          </button>
         </div>
       </div>
     </section>
